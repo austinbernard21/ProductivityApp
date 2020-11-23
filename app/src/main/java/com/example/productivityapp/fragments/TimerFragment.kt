@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.productivityapp.R
 import kotlinx.android.synthetic.main.fragment_timer.*
@@ -74,6 +75,30 @@ class TimerFragment : Fragment() {
         }
 
         updateCountDownText();
+
+
+        val spinner = view.findViewById<Spinner>(R.id.spinner)
+        var itemlist = arrayOf<String>("2","5")
+        var adapter = ArrayAdapter<String>(view.context,android.R.layout.simple_spinner_dropdown_item,itemlist)
+        spinner.adapter = adapter
+        spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //nothing
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (view != null) {
+                    START_MILLI_SECONDS = itemlist[position].toLong() * 60000L
+                    resetTimer()
+                }
+            }
+
+        }
     }
 
     private fun startTimer() {
@@ -103,8 +128,12 @@ class TimerFragment : Fragment() {
     private fun updateCountDownText() {
         val minute = (time_left_in_millis / 1000) / 60
         val seconds = (time_left_in_millis / 1000) % 60
+        if (minute > 9) {
+            text_view_countdown.text = "$minute:$seconds"
+        } else {
+            text_view_countdown.text = "0$minute:$seconds"
+        }
 
-        text_view_countdown.text = "$minute:$seconds"
     }
 
 
