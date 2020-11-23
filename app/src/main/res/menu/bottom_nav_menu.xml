@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/ic_alarm"
+        android:icon="@drawable/ic_alarm"
+        android:title="Timer"
+        />
+
+    <item
+        android:id="@+id/ic_tasks"
+        android:icon="@drawable/ic_tasks"
+        android:title="Tasks"
+        />
+
+    <item
+        android:id="@+id/ic_notes"
+        android:icon="@drawable/ic_notes"
+        android:title="Notepad"
+        />
+
+</menu>
