@@ -1,10 +1,13 @@
 package com.example.productivityapp.fragments
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import com.example.productivityapp.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -36,6 +39,37 @@ class NotesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_notes, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val clearButton = view.findViewById<Button>(R.id.clear_button)
+        val saveButton = view.findViewById<Button>(R.id.save_button)
+        val noteText = view.findViewById<EditText>(R.id.note_text)
+
+        val userInput = noteText.text
+
+        saveButton.setOnClickListener {view ->
+            val alertDialog = AlertDialog.Builder(view.context)
+            val textEditText = EditText(view.context)
+            var fileName = ""
+            alertDialog.setTitle("Enter Title")
+            alertDialog.setView(textEditText)
+            alertDialog.setPositiveButton("Add") {dialog, which ->
+                fileName = textEditText.text.toString()
+                println(fileName)
+            }
+            alertDialog.show()
+            println(userInput)
+
+        }
+
+        clearButton.setOnClickListener {
+            noteText.text.clear()
+        }
+
+
     }
 
     companion object {
