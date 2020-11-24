@@ -1,5 +1,6 @@
 package com.example.productivityapp.fragments
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.example.productivityapp.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_tasks.*
 import kotlinx.android.synthetic.main.fragment_tasks.view.*
 
@@ -17,8 +19,7 @@ import kotlinx.android.synthetic.main.fragment_tasks.view.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-lateinit var rowMain:View
-lateinit var taskCheck: CheckBox
+private val task_list = arrayListOf<String>("Task1","Tasks2")
 
 /**
  * A simple [Fragment] subclass.
@@ -51,12 +52,25 @@ class TasksFragment : Fragment() {
         val listView = view.findViewById<ListView>(R.id.task_items)
 //        val redColor = Color.parseColor("red")
 //        listView.setBackgroundColor(redColor)
-        var itemlist = arrayListOf<String>("Yes","No")
-        var adapter = ArrayAdapter<String>(view.context,android.R.layout.simple_list_item_1,itemlist)
+//        var itemlist = arrayListOf<String>("Yes","No")
+//        var adapter = ArrayAdapter<String>(view.context,android.R.layout.simple_list_item_1,itemlist)
 //        listView.adapter = adapter
-        listView.adapter = MyCustomAdapter(view.context)
+        var adapter = MyCustomAdapter(view.context)
+        listView.adapter = adapter
 
+        val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
 
+        fab.setOnClickListener {view ->
+            val alertDialog = AlertDialog.Builder(view.context)
+            val textEditText = EditText(view.context)
+            alertDialog.setTitle("Enter To Do Item")
+            alertDialog.setView(textEditText)
+            alertDialog.setPositiveButton("Add") {dialog, which ->
+                task_list.add(textEditText.text.toString())
+                adapter.notifyDataSetChanged()
+            }
+            alertDialog.show()
+        }
     }
 
 
@@ -70,21 +84,16 @@ class TasksFragment : Fragment() {
         }
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-            
+
             val layoutInflater = LayoutInflater.from(mContext)
             val rowMain = layoutInflater.inflate(R.layout.row_tasks,parent,false)
             val taskTextView = rowMain.findViewById<TextView>(R.id.item_textView)
             val taskCheck: CheckBox? = rowMain.findViewById<CheckBox>(R.id.task_checkBox)
-            if (taskCheck != null) {
-                if (taskCheck.isChecked) {
-                    println(position)
-                    println("checked")
-                } else {
-                    println("not checked")
-                }
-            } else {
-                println("null")
+            taskTextView.text = task_list.get(position)
+            taskCheck?.setOnCheckedChangeListener {buttonView: CompoundButton?, isChecked: Boolean ->  
+                println(isChecked)
             }
+
             return rowMain
         }
 
@@ -97,7 +106,7 @@ class TasksFragment : Fragment() {
         }
         //how many rows in list
         override fun getCount(): Int {
-            return 4
+            return task_list.size
         }
 
 
