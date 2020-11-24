@@ -1,13 +1,13 @@
 package com.example.productivityapp.fragments
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
+import android.widget.*
 import com.example.productivityapp.R
 import kotlinx.android.synthetic.main.fragment_tasks.*
 import kotlinx.android.synthetic.main.fragment_tasks.view.*
@@ -16,6 +16,9 @@ import kotlinx.android.synthetic.main.fragment_tasks.view.*
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+
+lateinit var rowMain:View
+lateinit var taskCheck: CheckBox
 
 /**
  * A simple [Fragment] subclass.
@@ -46,11 +49,59 @@ class TasksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val listView = view.findViewById<ListView>(R.id.task_items)
-        val redColor = Color.parseColor("red")
-        listView.setBackgroundColor(redColor)
+//        val redColor = Color.parseColor("red")
+//        listView.setBackgroundColor(redColor)
         var itemlist = arrayListOf<String>("Yes","No")
         var adapter = ArrayAdapter<String>(view.context,android.R.layout.simple_list_item_1,itemlist)
-        listView.adapter = adapter
+//        listView.adapter = adapter
+        listView.adapter = MyCustomAdapter(view.context)
+
+
+    }
+
+
+    private class MyCustomAdapter(context: Context): BaseAdapter() {
+
+        private val mContext: Context
+
+
+        init {
+            mContext = context
+        }
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+            
+            val layoutInflater = LayoutInflater.from(mContext)
+            val rowMain = layoutInflater.inflate(R.layout.row_tasks,parent,false)
+            val taskTextView = rowMain.findViewById<TextView>(R.id.item_textView)
+            val taskCheck: CheckBox? = rowMain.findViewById<CheckBox>(R.id.task_checkBox)
+            if (taskCheck != null) {
+                if (taskCheck.isChecked) {
+                    println(position)
+                    println("checked")
+                } else {
+                    println("not checked")
+                }
+            } else {
+                println("null")
+            }
+            return rowMain
+        }
+
+        override fun getItem(position: Int): Any {
+            return "Test string"
+        }
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
+        //how many rows in list
+        override fun getCount(): Int {
+            return 4
+        }
+
+
+
     }
 
     companion object {
