@@ -50,11 +50,6 @@ class TasksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val listView = view.findViewById<ListView>(R.id.task_items)
-//        val redColor = Color.parseColor("red")
-//        listView.setBackgroundColor(redColor)
-//        var itemlist = arrayListOf<String>("Yes","No")
-//        var adapter = ArrayAdapter<String>(view.context,android.R.layout.simple_list_item_1,itemlist)
-//        listView.adapter = adapter
         var adapter = MyCustomAdapter(view.context)
         listView.adapter = adapter
 
@@ -91,11 +86,24 @@ class TasksFragment : Fragment() {
             val taskCheck: CheckBox? = rowMain.findViewById<CheckBox>(R.id.task_checkBox)
             taskTextView.text = task_list.get(position)
             taskCheck?.setOnCheckedChangeListener {buttonView: CompoundButton?, isChecked: Boolean ->  
-                println(isChecked)
+                val sharedPreferences = mContext.getSharedPreferences("pref", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+
+                editor.apply{
+                    putString("STRING$position", task_list.get(position))
+                    putBoolean("CHECKED$position", isChecked)
+                }.apply()
             }
+
+            val sharedPreferences = mContext.getSharedPreferences("pref", Context.MODE_PRIVATE)
+            val savedBoolean = sharedPreferences.getBoolean("CHECKED$position", false)
+
+            taskCheck?.isChecked = savedBoolean
+
 
             return rowMain
         }
+
 
         override fun getItem(position: Int): Any {
             return "Test string"
