@@ -1,9 +1,11 @@
 package com.example.productivityapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.example.productivityapp.fragments.NotesFragment
 import com.example.productivityapp.fragments.TasksFragment
@@ -35,6 +37,30 @@ class MainActivity : AppCompatActivity() {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.options_menu, menu)
         return true
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when(item?.itemId) {
+            R.id.ic_n_history -> {
+                var intent = Intent(this,NoteHistory::class.java)
+                startActivity(intent)
+                return true
+            }
+            R.id.ic_t_history -> {
+                var intent = Intent(this,TaskHistory::class.java)
+                startActivity(intent)
+                return true
+            }
+            R.id.ic_settings -> {
+                var intent = Intent(this,SettingsActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun makeCurrentFragment(fragment: Fragment) =
