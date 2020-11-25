@@ -1,25 +1,25 @@
 package com.example.productivityapp.fragments
 
+import android.content.Context
+import android.content.SharedPreferences.Editor
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import com.example.productivityapp.R
 import kotlinx.android.synthetic.main.fragment_timer.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-//var START_MILLI_SECONDS = 60000L
-//
-//var countdown_timer: CountDownTimer? = null
-//var isRunning: Boolean = false;
-//var time_left_in_millis = START_MILLI_SECONDS
 
 /**
  * A simple [Fragment] subclass.
@@ -36,6 +36,7 @@ class TimerFragment : Fragment() {
     private var countdown_timer: CountDownTimer? = null
     private var isRunning: Boolean = false;
     private var time_left_in_millis = START_MILLI_SECONDS
+    private var endTime = 0L
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +75,7 @@ class TimerFragment : Fragment() {
             resetTimer()
         }
 
-        updateCountDownText();
+//        updateCountDownText()
 
 
         val spinner = view.findViewById<Spinner>(R.id.spinner)
@@ -102,6 +103,8 @@ class TimerFragment : Fragment() {
     }
 
     private fun startTimer() {
+        endTime = System.currentTimeMillis() + time_left_in_millis
+
         countdown_timer = object : CountDownTimer(time_left_in_millis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 time_left_in_millis = millisUntilFinished
@@ -136,44 +139,52 @@ class TimerFragment : Fragment() {
 
     }
 
+    override fun onStop() {
+        super.onStop()
+
+        val pref = activity?.getSharedPreferences("pref", Context.MODE_PRIVATE)
+        val editor =  pref?.edit()
+
+        editor?.putLong("millisLeft", time_left_in_millis);
+        editor?.putBoolean("timerRunning", isRunning);
+        editor?.putLong("endTime", endTime);
+
+        editor?.apply()
+
+        countdown_timer?.cancel()
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val pref = activity?.getSharedPreferences("pref", Context.MODE_PRIVATE)
+
+        if (pref != null) {
+            time_left_in_millis = pref.getLong("millisLeft", START_MILLI_SECONDS)
+            isRunning = pref.getBoolean("timerRunning", false)
+        }
+
+        updateCountDownText()
+
+        if (isRunning) {
+            if (pref != null) {
+                endTime = pref.getLong("endTime", 0)
+                time_left_in_millis = endTime - System.currentTimeMillis()
+            }
+            if (time_left_in_millis < 0) {
+                time_left_in_millis = 0
+                isRunning = false
+                updateCountDownText()
+            } else {
+                startTimer()
+            }
+
+        }
+
+    }
 
 
-
-//    private fun startTimer(time_in_seconds: Long) {
-//        countdown_timer = object : CountDownTimer(time_in_seconds ,1000) {
-//            override fun onFinish() {
-//                // do nothing
-//            }
-//
-//            override fun onTick(p0: Long) {
-//                time_in_milli_seconds = p0
-////                updateTextUI()
-//            }
-//        }
-//        .start()
-//
-//        isRunning = true
-//    }
-
-//    private fun pauseTimer() {
-//        countdown_timer?.cancel()
-//        isRunning = false
-//    }
-
-//    private fun resetTimer() {
-//        time_in_milli_seconds = START_MILLI_SECONDS
-//        countdown_timer?.cancel()
-//        isRunning = false
-//        updateTextUI()
-//    }
-//
-//
-//    private fun updateTextUI() {
-//        val minute = (time_in_milli_seconds / 1000) / 60
-//        val seconds = (time_in_milli_seconds / 1000) % 60
-//
-//        text_view_countdown.text = "$minute:$seconds"
-//    }
 
     companion object {
         /**
