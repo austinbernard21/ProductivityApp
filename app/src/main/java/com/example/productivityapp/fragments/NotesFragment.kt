@@ -1,7 +1,9 @@
 package com.example.productivityapp.fragments
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
+import android.os.Environment
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import com.example.productivityapp.R
+import java.io.FileOutputStream
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,10 +61,11 @@ class NotesFragment : Fragment() {
             alertDialog.setView(textEditText)
             alertDialog.setPositiveButton("Add") {dialog, which ->
                 fileName = textEditText.text.toString()
-                println(fileName)
+                view.context.openFileOutput(fileName, Context.MODE_PRIVATE).use {
+                    it.write(userInput.toString().toByteArray())
+                }
             }
             alertDialog.show()
-            println(userInput)
 
         }
 
