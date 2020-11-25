@@ -51,11 +51,6 @@ class NotesFragment : Fragment() {
         val saveButton = view.findViewById<Button>(R.id.save_button)
         val noteText = view.findViewById<EditText>(R.id.note_text)
 
-        var files: Array<String> = view.context.fileList()
-        for (f in files) {
-            println(f)
-        }
-
         val userInput = noteText.text
 
         saveButton.setOnClickListener {view ->
