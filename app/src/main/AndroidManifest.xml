@@ -10,6 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".CustomTimerActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CustomTimerActivity" />
+        </activity>
+        <activity
             android:name=".EditNoteActivity"
             android:parentActivityName=".NoteHistory">
             <meta-data

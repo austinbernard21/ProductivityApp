@@ -53,6 +53,11 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
+            R.id.ic_t_custom_timer -> {
+                var intent = Intent(this,CustomTimerActivity::class.java)
+                startActivity(intent)
+                return true
+            }
             R.id.ic_settings -> {
                 var intent = Intent(this,SettingsActivity::class.java)
                 startActivity(intent)

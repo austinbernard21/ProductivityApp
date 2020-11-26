@@ -37,6 +37,7 @@ class TimerFragment : Fragment() {
     private var isRunning: Boolean = false;
     private var time_left_in_millis = START_MILLI_SECONDS
     private var endTime = 0L
+    private var itemlist = arrayOf<String>("2","5")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +58,15 @@ class TimerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val pref = activity?.getSharedPreferences("pref", Context.MODE_PRIVATE)
+        val editor =  pref?.edit()
+
+        editor?.putInt("TIMERS", itemlist.size)
+        for (item in itemlist) {
+            editor?.putString("timer_$item", item)
+        }
+        editor?.apply()
 
         button_start.setOnClickListener() {
             if(!isRunning) {
@@ -79,7 +89,7 @@ class TimerFragment : Fragment() {
 
 
         val spinner = view.findViewById<Spinner>(R.id.spinner)
-        var itemlist = arrayOf<String>("2","5")
+//        var itemlist = arrayOf<String>("2","5")
         var adapter = ArrayAdapter<String>(view.context,android.R.layout.simple_spinner_dropdown_item,itemlist)
         spinner.adapter = adapter
         spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
