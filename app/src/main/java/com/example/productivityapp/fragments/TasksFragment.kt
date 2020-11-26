@@ -2,6 +2,7 @@ package com.example.productivityapp.fragments
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.example.productivityapp.MainActivity
 import com.example.productivityapp.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_tasks.*
@@ -84,6 +86,7 @@ class TasksFragment : Fragment() {
             val rowMain = layoutInflater.inflate(R.layout.row_tasks,parent,false)
             val taskTextView = rowMain.findViewById<TextView>(R.id.item_textView)
             val taskCheck: CheckBox? = rowMain.findViewById<CheckBox>(R.id.task_checkBox)
+            val deleteButton = rowMain.findViewById<ImageButton>(R.id.delete_task_button)
             taskTextView.text = task_list.get(position)
             taskCheck?.setOnCheckedChangeListener {buttonView: CompoundButton?, isChecked: Boolean ->  
                 val sharedPreferences = mContext.getSharedPreferences("pref", Context.MODE_PRIVATE)
@@ -99,6 +102,30 @@ class TasksFragment : Fragment() {
             val savedBoolean = sharedPreferences.getBoolean("CHECKED$position", false)
 
             taskCheck?.isChecked = savedBoolean
+
+            deleteButton.setOnClickListener { view ->
+                val alertDialog = AlertDialog.Builder(mContext)
+                alertDialog.setMessage("Do you want to delete task").setCancelable(false)
+                    .setPositiveButton("Proceed", DialogInterface.OnClickListener {
+                            dialog, id ->
+                        val sharedPreferences = mContext.getSharedPreferences("pref", Context.MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        editor.apply{
+                            editor.remove("STRING$position")
+                            editor.remove("CHECKED$position")
+                            task_list.removeAt(position)
+                            notifyDataSetChanged()
+                        }.apply()
+                        dialog.dismiss()
+
+
+                    }).setNegativeButton("Cancel", DialogInterface.OnClickListener {
+                            dialog, id -> dialog.cancel()
+                    })
+
+                alertDialog.show()
+            }
+
 
 
             return rowMain

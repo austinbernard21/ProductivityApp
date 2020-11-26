@@ -13,6 +13,9 @@ import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import com.example.productivityapp.R
 import kotlinx.android.synthetic.main.fragment_timer.*
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.math.min
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -147,11 +150,8 @@ class TimerFragment : Fragment() {
     private fun updateCountDownText() {
         val minute = (time_left_in_millis / 1000) / 60
         val seconds = (time_left_in_millis / 1000) % 60
-        if (minute > 9) {
-            text_view_countdown.text = "$minute:$seconds"
-        } else {
-            text_view_countdown.text = "0$minute:$seconds"
-        }
+        val time_left_formatted = String.format(Locale.getDefault(),"%02d:%02d", minute,seconds)
+        text_view_countdown.text = time_left_formatted
 
     }
 
