@@ -3,16 +3,15 @@ package com.example.productivityapp
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.res.Configuration
 import android.media.Image
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ImageButton
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_custom_timer.*
 import kotlin.concurrent.timer
 
 
@@ -38,12 +37,36 @@ class CustomTimerActivity : AppCompatActivity() {
             }
         }
 
+        val addTimerButton = findViewById<ImageButton>(R.id.add_timer_button)
+
+        addTimerButton.setOnClickListener { view ->
+            val alertDialog = AlertDialog.Builder(this)
+            val newTimerText = EditText(this)
+            newTimerText.setRawInputType(Configuration.KEYBOARD_12KEY)
+            alertDialog.setView(newTimerText)
+            alertDialog.setMessage("Enter a time in minutes")
+            alertDialog.setPositiveButton("Create") { dialog, id ->
+                timerKeys?.add("timer_${timerKeys?.size}")
+                timerValues?.add(newTimerText.text)
+                val sharedPreferences = this.getSharedPreferences("pref", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.apply{
+                    editor.putString("timer_${timerKeys?.size}",newTimerText.text.toString())
+                }.apply()
+                dialog.dismiss()
+            }
+            alertDialog.setNegativeButton("Cancel") { dialog, id ->
+                dialog.cancel()
+            }
+            alertDialog.show()
+        }
+
 
         val timerListView = findViewById<ListView>(R.id.timer_list)
         var adapter = TimerRowAdapter(this,timerKeys,timerValues)
         timerListView.adapter = adapter
-
         adapter.notifyDataSetChanged()
+
 
 
     }
