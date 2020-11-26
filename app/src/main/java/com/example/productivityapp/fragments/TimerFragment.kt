@@ -37,7 +37,7 @@ class TimerFragment : Fragment() {
     private var isRunning: Boolean = false;
     private var time_left_in_millis = START_MILLI_SECONDS
     private var endTime = 0L
-    private var itemlist = arrayOf<String>("2","5")
+    private var itemlist: MutableList<String> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +61,12 @@ class TimerFragment : Fragment() {
 
         val pref = activity?.getSharedPreferences("pref", Context.MODE_PRIVATE)
         val editor =  pref?.edit()
+        val allEntries: Map<String, *> = pref?.getAll() as Map<String, *>
+        for ((key, value) in allEntries.entries) {
+            if (key.startsWith("timer_", false)) {
+                itemlist.add(value as String)
+            }
+        }
 
         editor?.putInt("TIMERS", itemlist.size)
         for (item in itemlist) {
