@@ -7,18 +7,8 @@
         />
 
     <item
-        android:id="@+id/ic_t_history"
-        android:title="Task History"
-        />
-
-    <item
         android:id="@+id/ic_t_custom_timer"
         android:title="Custom Timers"
-        />
-
-    <item
-        android:id="@+id/ic_settings"
-        android:title="Settings"
         />
 
 </menu>
